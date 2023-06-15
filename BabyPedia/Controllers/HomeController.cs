@@ -167,7 +167,7 @@ public class HomeController : Controller
     {
         return View();
     }
-    
+
 
     [HttpPost("/reset/password")]
     public async Task<IActionResult> ResetPasswordSent([FromForm] string email, [FromForm] string newpass)
@@ -180,7 +180,7 @@ public class HomeController : Controller
 
         return Redirect("/home/login?info=Password set!");
     }
-    
+
 
     [HttpGet("/test/sendemail")]
     public async Task<IActionResult> SendEmailTest()
@@ -207,7 +207,7 @@ public class HomeController : Controller
 
         await _emailHandler.SendEmail(email, "BabyPedia Forgot Password",
             @$"Please verify your account https://babypediaph.com/reset/{user.Id}");
-        
+
         return Redirect($"/admin/sendEmail?info=Reset password sent to {email}!");
     }
 
@@ -267,7 +267,7 @@ public class HomeController : Controller
             .Include(x => x.Child)
             .Include(x => x.AppointmentType)
             .Include(x => x.Payment)
-            .FirstOrDefaultAsync(x => x.Id == id));
+            .FirstOrDefaultAsync(x => x.Id == id && x.Accepted));
     }
 
     [Authorize(Roles = "Pedia")]
@@ -281,6 +281,20 @@ public class HomeController : Controller
             .Include(x => x.Pedia)
             .Include(x => x.AppointmentType)
             .FirstOrDefaultAsync(x => x.Id == id));
+    }
+
+    [Authorize(Roles = "Pedia")]
+    [HttpGet("/pedia/accept/{id}")]
+    public async Task<IActionResult> AcceptAppointment(long id)
+    {
+        var appointment = await _babyPediaContext.Appointments.FirstOrDefaultAsync(x => x.Id == id);
+        appointment.Accepted = true;
+
+        _babyPediaContext.Appointments.Update(appointment);
+
+        await _babyPediaContext.SaveChangesAsync();
+
+        return Redirect("/pedia/appointmentlist");
     }
 
     [Authorize(Roles = "Pedia,Parent")]

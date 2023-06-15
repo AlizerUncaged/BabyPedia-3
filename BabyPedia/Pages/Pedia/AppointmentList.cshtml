@@ -55,6 +55,10 @@
                     </th>
                     <th>
                         <a href="/pedia/appointment/@i.Id" class="btn-success btn"><i class="bi bi-chat-fill"></i> Chat</a>
+                        @if (!i.Accepted)
+                        {
+                            <a href="/pedia/accept/@i.Id" class="btn-success btn"><i class="bi bi-hand-thumbs-up-fill"></i> Accept</a>
+                        }
                         <a href="/prescribe/@i.Id" class="btn-success btn"><i class="bi bi-file-break-fill"></i> Prescribe</a>
                     </th>
                 </tr>

@@ -14,6 +14,8 @@ public class Appointment
 
     public string? Prescription { get; set; }
 
+    public bool Accepted { get; set; } = false;
+
     public AppointmentPayment Payment { get; set; }
     public AppointmentType AppointmentType { get; set; }
 
