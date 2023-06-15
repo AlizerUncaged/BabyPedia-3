@@ -84,6 +84,7 @@
                 <th scope="col">Date and Time</th>
                 <th scope="col">Status</th>
                 <th scope="col">Actions</th>
+                <th scope="col">Accepted</th>
             </tr>
             </thead>
             <tbody>
@@ -97,6 +98,9 @@
                     <td class="@(!string.IsNullOrWhiteSpace(i.Prescription) ? "fw-bold text-success" : "")">@i.Payment.Status@(string.IsNullOrWhiteSpace(i.Prescription) ? "" : ", Prescribed!")</td>
                     <td>
                         <a href="/parent/currentappointment/@i.Id" class="btn btn-primary"><i class="bi bi-eye-fill"></i> View Appointment</a>
+                    </td>
+                    <td>
+                        @(i.Accepted ? "Accepted" : "Not Accepted Yet")
                     </td>
                 </tr>
             }
