@@ -41,7 +41,20 @@
             form.personalcheck.focus();
             return false;
           }
+          
+          
+          var username = form.UserName.value;
+            // Check if username is in email format
+            var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+            if (emailRegex.test(username)) {
+              alert("Username cannot be in email format.");
+              return false; // Prevent form submission
+            }
+            
+            
+            
           return true;
+          
         };
       
 </script>
