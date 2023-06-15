@@ -1,0 +1,74 @@
+﻿@page
+@model BabyPedia.Models.Child
+
+@{
+    ViewData["Registered"] = true;
+    Layout = "_Layout";
+
+    var textBoxClasses = new Dictionary<string, object>()
+    {
+        { "class", "form-control" },
+        // { "readonly", "readonly" },
+    };
+    var textBoxClassesReadonly = new Dictionary<string, object>()
+    {
+        { "class", "form-control" },
+        { "readonly", "readonly" },
+    };
+
+}
+
+<div class="text-center container-fluid row text-primary">
+    <h1 class="display-4 long-rounded fw-bold">Child's Information</h1>
+</div>
+
+<form class="container-fluid row" action="/register-child" method="post">
+    <div class="col-md-6 col-12">
+        <div class="form-floating mb-3">
+            @Html.HiddenFor(m => m.Id, htmlAttributes: textBoxClassesReadonly)
+            @Html.LabelFor(x => x.Id)
+        </div>
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.FirstName, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.FirstName)
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.LastName, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.LastName)
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.HiddenFor(m => m.DateTimeCreated, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.DateTimeCreated)
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.PlaceOfBirth, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.PlaceOfBirth)
+        </div>
+
+    </div>
+    <div class="col-md-6 col-12">
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.BirthHeight, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.BirthHeight)
+        </div>
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.BirthWeight, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.BirthWeight)
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.Sex, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.Sex)
+        </div>
+
+        <div class="flex-column d-flex justify-content-between">
+            <button class="btn btn-primary">
+                <i class="bi bi-arrow-bar-right"></i> Confirm
+            </button>
+        </div>
+    </div>
+</form>

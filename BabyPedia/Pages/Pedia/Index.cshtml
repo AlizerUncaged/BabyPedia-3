@@ -1,0 +1,19 @@
+﻿@page
+
+@{
+    ViewBag.Title = "Pedia";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid row">
+    <div class="col-md-6 col-12">
+        <img src="~/images/home_register.jpg"/>
+    </div>
+    <div class="col-md-6 col-12 my-auto fw-bold d-flex flex-column">
+        @*add notification of PRC*@
+        <a href="/pedia/appointmentlist" class="h1 mb-4 row text-decoration-none">Online Appointment</a>
+        <a href="/pedia/patientrecord" class="h1 mb-4 row text-decoration-none text-danger">Patient Record</a>
+        <a href="/pedia/vaccinesearch" class="h1 mb-4 row text-decoration-none">Vaccine Information</a>
+        <a href="/pedia/subscriptionpayment" class="h1 mb-4 row text-decoration-none text-danger">Subscription Payment</a>
+    </div>
+</div>

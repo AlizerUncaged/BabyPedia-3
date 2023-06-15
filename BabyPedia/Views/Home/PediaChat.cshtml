@@ -1,0 +1,197 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using BabyPedia.Data
+@using Microsoft.EntityFrameworkCore
+@model Appointment
+@inject UserManager<IdentityUser> UserManager
+@inject BabyPediaContext DbContext
+@{
+    ViewBag.Title = "Chat With";
+    Layout = "_Layout";
+
+    var currentUser = await UserManager.GetUserAsync(User);
+    IdentityUser targetUser = Model.Pedia;
+    if (User.IsInRole("Pedia"))
+        targetUser = Model.Parent;
+
+
+    var userChats = await DbContext.Chats
+        .Include(x => x.From)
+        .Include(x => x.To)
+        .Where(x => x.From.Id == targetUser.Id || x.To.Id == targetUser.Id).ToListAsync();
+
+
+    var userChatsWithDentist = userChats.Where(x => x.From.Id == currentUser.Id || x.To.Id == currentUser.Id).ToList();
+
+    var dentistChats = await DbContext.Chats
+        .Include(x => x.From)
+        .Include(x => x.To).Where(x => x.From.Id == currentUser.Id || x.To.Id == currentUser.Id).ToListAsync();
+
+    var dentistChatsWithUser = dentistChats.Where(x => x.From.Id == targetUser.Id || x.To.Id == targetUser.Id).ToList();
+
+    var currentChats = dentistChatsWithUser.Concat(userChatsWithDentist).Distinct().OrderBy(x => x.SentTime).ToList();
+
+
+}
+<h1 class="text-center">
+    <p class="text-center fw-bold text-primary">
+        Contact @(User.IsInRole("Pedia") ? "Client" : "Pedia")
+    </p>
+</h1>
+<div class="container-fluid row">
+    <div class="col">
+        <div class="container">
+            <div style="background-color: #F9909C !important;" class="rounded-3 m-2 fw-bold p-3 container-fluid row">
+                <div class="col">
+                    @if (User.IsInRole("Pedia"))
+                    {
+                        <p class="row">
+                            Patient Name: @Model.Child.Username
+                        </p>
+                    }
+                    else if (User.IsInRole("Parent"))
+                    {
+                        <p class="row">
+                            Pedia Name: @Model.Pedia.FirstName @Model.Pedia.LastName
+                        </p>
+                    }
+                    <p class="row">
+                        Service: @Model.AppointmentType.Name
+                    </p>
+                    <p class="row">
+                        Date: @Model.AppointmentDate
+                    </p>
+                </div>
+                <div class="col">
+                    <p class="row">
+                        Service: @Model.AppointmentType.Name
+                    </p>
+                    <p class="row">
+                        Time: @Model.AppointmentTime
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="container d-flex flex-row flex-wrap">
+            <div>
+                <a href="/prescriptions/@Model.Id" class="btn-primary btn m-2">View Prescription</a>
+            </div>
+            @* <div> *@
+            @*     <a href="" class="btn-success btn m-2">Download</a> *@
+            @* </div> *@
+            <div>
+                <a href="" class="btn-danger btn m-2">Launch Meeting</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="container-fluid overflow-hidden">
+            <div id="messagesList" class="w-100 rounded-3 mb-4 p-2" style="min-height: 400px; max-height: 50vh; overflow-y: auto">
+                @foreach (var chat in currentChats)
+                {
+                    if (chat.From.Id == currentUser.Id) // Current User Chatted
+                    {
+                        <div class="d-flex flex-row-reverse bd-highlight mb-3">
+                            <div class=" bd-highlight border-2 rounded-3 border border-primary p-2 shadow">
+                                <p class="opacity-50">@currentUser.UserName</p>
+                                <p class="m-0 p-0 my-auto ms-2">@chat.Content</p>
+                            </div>
+                        </div>
+                    }
+                    else // The other person
+                    {
+                        <div class="d-flex flex-row bd-highlight mb-3">
+                            <div class=" bd-highlight border-2 rounded-3 border border-primary p-2 shadow">
+                                <p class="opacity-50">@targetUser.UserName</p>
+                                <p class="m-0 p-0 my-auto ms-2">@chat.Content</p>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="input-group mb-3 rounded-3">
+                <input id="messageInput" type="text" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                <button id="sendButton" class="btn btn-primary" type="button"><i class="bi bi-send-fill"></i> Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+
+<script>
+    const connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+    
+    connection.start().then(function () {
+        document.getElementById("sendButton").disabled = false;
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+    
+    
+    var targetUser = '@(Model.Parent.Id)';
+    var currentUser = '@(UserManager.GetUserId(User))';
+    
+    function isEmptyOrSpaces(str){
+        return str === null || str.match(/^ *$/) !== null;
+    }
+
+    connection.on("ReceiveMessage", function (from, user, message) {
+        var msg = message.replace(/&/g, "&").replace(/&/g, ">");
+        console.log(`From: ${from} target: ${targetUser} User: ${user}`)
+        var encodedMsg = msg;
+        let messageHtml = null;
+        if (user === currentUser && from === targetUser)
+        messageHtml = `
+                <div class="d-flex flex-row-reverse  bd-highlight mb-3">
+                          <div class=" bd-highlight shadow rounded-3  p-2">
+                            <p class="opacity-50">@currentUser.UserName</p>
+                            <p class="m-0 p-0 my-auto ms-2">${encodedMsg}</p>          
+                            </div>
+                </div>
+        `;
+        else if (from === currentUser && user === targetUser)
+            {
+                 messageHtml = `
+                <div class="d-flex flex-row bd-highlight mb-3">
+                          <div class=" bd-highlight shadow rounded-3   p-2">
+                                <p class="opacity-50">@Model.Parent.UserName</p>
+                                <p class="m-0 p-0 my-auto ms-2">${encodedMsg}</p>          
+                         </div>
+                 </div>
+                        `;
+            }
+        if (!isEmptyOrSpaces(messageHtml))
+            document.getElementById("messagesList").innerHTML += messageHtml;
+    });
+    
+    document.getElementById("messageInput").onkeyup = function(ev) {
+      if (ev.keyCode == 13)
+          {
+              document.getElementById('sendButton').click()
+          }
+    };
+    
+    const targetUserId =  '@(Model.Parent.Id)';
+    const signedInUserId = '@(UserManager.GetUserId(User))';
+    
+    document.getElementById("sendButton").addEventListener("click", function (event) {
+        var message = document.getElementById("messageInput").value;
+        document.getElementById("messageInput").value = "";
+        connection.invoke("SendMessage", targetUserId, currentUser, message).catch(function (err) {
+            return console.error(err.toString());
+        });
+        
+        // Save chat.
+        (async () => {
+            const response = await fetch(`/chat/${targetUserId}?` + new URLSearchParams({
+                message: message
+            }), {
+                method : "POST"
+            })
+       
+            console.log(data)
+        })()
+        
+        event.preventDefault();
+    });
+</script>

@@ -1,0 +1,46 @@
+﻿@page
+@using BabyPedia.Data
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+
+@inject BabyPediaContext DbContext
+@inject UserManager<IdentityUser> UserManager
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewBag.Title = "Partnered Pedias";
+    Layout = "_Layout";
+
+    var pedias = await DbContext.PartneredPedias.ToListAsync();
+}
+
+
+<div class="container-fluid">
+    <h1 class="text-center fw-bold text-primary row w-100 container-fluid">Partnered Pedias</h1>
+    @if (pedias.Any())
+    {
+        <table class="table m-2">
+            <thead>
+            <tr>
+                <th scope="col">Pediatrician Name</th>
+                <th scope="col">Contact Number</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var i in pedias)
+            {
+                <tr>
+                    <th scope="row">@i.FirstName @i.LastName</th>
+                    <td>@i.ContactNumber</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-danger" role="alert">
+            There are no pedias registered!
+        </div>
+    }
+</div>

@@ -1,0 +1,117 @@
+﻿@page
+@using BabyPedia.Data
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@inject UserManager<IdentityUser> UserManager
+@inject BabyPediaContext DbContext
+@{
+    ViewData["Registered"] = true;
+    ViewData["Title"] = "Subscription Payment";
+    Layout = "_Layout";
+
+    var currentUser = await UserManager.GetUserAsync(User);
+    var currentDoctor = await DbContext.PartneredPedias
+        .Include(x => x.PediaPayments)
+        .FirstOrDefaultAsync(x => x.Id == currentUser.Id);
+
+    var havePaidThisMonth = currentDoctor.PediaPayments.Any(x =>
+        x.DatePaid.Year == DateTime.Now.Year &&
+        x.DatePaid.Month == DateTime.Now.Month);
+
+}
+<script src="https://www.paypal.com/sdk/js?client-id=AbhPFeMhKFkyF6Xv-9ft8iO5HPmYcYTLA8QeZXmfA5Yqwl8MDbJtrpsOKaLT37Le0tTzR9ssUM1uLxqD"></script>
+
+<div class="container">
+    <h1 class="text-center">
+        <p class="text-center fw-bold text-primary">
+            Subscription Payment for Pediatricians
+        </p>
+    </h1>
+    <img src="~/images/SubscriptionOffers.png"/>
+    @if (currentDoctor.PediaPayments.Any())
+    {
+        <table class="table m-2 table-borderless">
+            <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Date Paid</th>
+                <th scope="col">Paid</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var i in currentDoctor.PediaPayments)
+            {
+                <tr>
+                    <th scope="row" class="">@i.Id</th>
+                    <th scope="row" class="">@i.DatePaid</th>
+                    <th scope="row" class="">$@i.Payment</th>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-danger" role="alert">
+            You have not paid any subscriptions yet!
+        </div>
+    }
+
+    @* <p class="text-primary">Payment Details</p> *@
+    @* <div class="container rounded-3 my-2 fw-bold py-2" style="background-color: #C4C4C4 !important;"> *@
+    @*     <p> *@
+    @*         BDO Acc No. 000-123-456-789 *@
+    @*         <br/> *@
+    @*         BPI Acc No. 000-123-456 *@
+    @*         <br/> *@
+    @*         GCASH: 09111-222-333 *@
+    @*         <br/> *@
+    @*     </p> *@
+    @* </div> *@
+    @if (havePaidThisMonth)
+    {
+        
+        <div class="alert alert-info" role="alert">
+            You've already paid for this month!
+        </div>
+    }
+    else
+    {
+        <div class="container-fluid my-2 d-flex flex-row p-0">
+            <div id="paypal-button">
+                <h2>Pay via Paypal!</h2>
+            </div>
+        </div>
+        <script>
+              paypal.Buttons({
+                createOrder: function(data, actions) {
+                  return actions.order.create({
+                    purchase_units: [{
+                      amount: {
+                        value: '20.00'
+                      }
+                    }]
+                  });
+                },
+                onApprove: function(data, actions) {
+                  return actions.order.capture().then(function(details) {
+                    // Send the details to your server for verification
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "/api/verifyPayment");
+                    xhr.setRequestHeader("Authorization", "Bearer <YOUR_ACCESS_TOKEN>");
+                    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                    xhr.onload = function() {
+                      if (xhr.status === 200) {
+                          location.reload()
+                      } else {
+                        alert("Payment verification failed!");
+                      }
+                    };
+                    xhr.send(JSON.stringify(details));
+                  });
+                }
+              }).render('#paypal-button');
+    </script>
+    }
+</div>

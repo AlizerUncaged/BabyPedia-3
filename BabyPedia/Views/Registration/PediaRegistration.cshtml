@@ -1,0 +1,143 @@
+﻿@model PartneredPedia
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "Pedia Registration";
+
+
+    var textBoxClasses = new Dictionary<string, object>()
+    {
+        { "class", "form-control" },
+        { "required", "" },
+        // { "readonly", "readonly" },
+    };
+}
+
+@if (HttpContextAccessor.HttpContext.Request.Query.TryGetValue("error", out var errorString))
+{
+    <div class="alert alert-danger" role="alert">
+        @errorString
+    </div>
+}
+<script>
+      
+        var checkForm = function(form) {
+          if(!form.personal.checked) {
+            alert("Please indicate that your personal data will be uploaded to the internet");
+            form.personal.focus();
+            return false;
+          }
+          return true;
+        };
+      
+</script>
+
+<div class="text-center container-fluid row text-primary">
+    <h1 class="display-4 long-rounded fw-bold">Registration</h1>
+    <p class="fw-bold text-dark">
+        Register a BabyPedia account
+    </p>
+</div>
+<div class="container-fluid row">
+    <form method="post" class="container-fluid row" action="/register-pedia" onsubmit="return checkForm(this)">
+        <div class="col-md-6 col-12">
+            <div class="form-floating mb-3">
+                @Html.TextBoxFor(m => m.UserName, htmlAttributes: textBoxClasses)
+                <label for="UserName">User Name</label>
+            </div>
+            <div class="form-floating mb-3">
+                @Html.TextBoxFor(m => m.Email, htmlAttributes: textBoxClasses)
+                @Html.LabelFor(x => x.Email)
+            </div>
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" id="password" name="password">
+                <label for="password">Password</label>
+            </div>
+            <div class="form-floating mb-3">
+                @Html.TextBoxFor(m => m.FirstName, htmlAttributes: textBoxClasses)
+                <label for="FirstName">First Name</label>
+            </div>
+            <div class="form-floating mb-3">
+                @Html.TextBoxFor(m => m.LastName, htmlAttributes: textBoxClasses)
+                <label for="LastName">Last Name</label>
+            </div>
+        </div>
+        <div class="col-md-6 col-12">
+            <div class="form-floating mb-3">
+                @Html.TextBoxFor(m => m.Address, htmlAttributes: textBoxClasses)
+                @Html.LabelFor(x => x.Address)
+            </div>
+
+            <div class="form-floating mb-3">
+                @Html.TextBoxFor(m => m.ContactNumber, htmlAttributes: textBoxClasses)
+                <label for="ContactNumber">Contact Number</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                @Html.TextBoxFor(m => m.PrcLicenseNumber, htmlAttributes: textBoxClasses)
+                <label for="PrcLicenseNumber">Prc License Number</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                @Html.EditorFor(m => m.PrcExpiration, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                <label for="PrcExpiration">Prc Expiration</label>
+            </div>
+
+
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" value="" id="toscheck">
+                <label class="form-check-label" for="toscheck">
+                    I agree to the <strong>Terms of Service</strong> and <strong>Privacy Policy</strong>
+                </label>
+            </div>
+            <div class="form-check mb-2">
+                <input name="personal" class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                    I understand that personal data will be uploaded to the internet
+                </label>
+            </div>
+            <div class="flex-column d-flex justify-content-between">
+                <a href="/home/login" class="mb-2 nav-link">Already have an account?</a>
+                <button class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-right"></i> Register
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+@* *@
+@* <div class="text-center"> *@
+@*     <h1 class="display-4">Register a BabyPedia Account</h1> *@
+@* </div> *@
+@* *@
+@* <div> *@
+@*     Username <input type="text" name="User" id="Username" value="" /> *@
+@* </div> *@
+@* *@
+@* <div> *@
+@*     Email <input type="text" name="Email" id="Email" value="" /> *@
+@* </div> *@
+@* *@
+@* <div> *@
+@*     First Name <input type="text" name="FName" id="FirstName" value="" /> *@
+@* </div> *@
+@* *@
+@* <div> *@
+@*     Last Name <input type="text" name="LName" id="LastName" value="" /> *@
+@* </div> *@
+@* *@
+@* <div> *@
+@*     Address <input type="text" name="Address" id="Address" value="" /> *@
+@* </div> *@
+@* *@
+@* <div> *@
+@*     Contact Number <input type="text" name="Contact" id="ContactNo" value="" /> *@
+@* </div> *@
+@* *@
+@* <div> *@
+@*     PRC License Number <input type="text" name="PRCLn" id="PRCLn" value="" /> *@
+@* </div> *@
+@* <div> *@
+@*     PRC Expiration Date <input type="text" name="PRCEd" id="PRCEd" value="" /> *@
+@* </div> *@
+@* *@
+@* <input type="submit" value="Register" /> *@

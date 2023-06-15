@@ -1,0 +1,72 @@
+﻿@page
+@using BabyPedia.Data
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@inject BabyPediaContext BabyPediaContext
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    ViewData["Registered"] = true;
+    Layout = "_Layout";
+    var pediaId = UserManager.GetUserId(User);
+
+    var appointmentList = await BabyPediaContext.Appointments
+        .Include(x => x.Parent)
+        .Include(x => x.Child)
+        .Include(x => x.AppointmentType)
+        .Where(x => x.Pedia.Id == pediaId).ToListAsync();
+}
+
+@if (appointmentList.Any())
+{
+
+    <div class="container">
+        <h1 class="text-center">
+            <p class="text-center fw-bold text-primary">
+                Appointments
+            </p>
+        </h1>
+        @* <a class="m-2 btn text-dark" style="background-color: #FF9E7A !important;">Export Audit Log</a> *@
+        <table class="table m-2">
+            <thead>
+            <tr>
+                <th scope="col">Guardian's Name</th>
+                <th scope="col">Child's Name</th>
+                <th scope="col">Appointment Type</th>
+                <th scope="col">Date and Time</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var i in appointmentList)
+            {
+                <tr>
+                    <th scope="row" class="">
+                        @i.Parent.FirstName @i.Parent.LastName
+                    </th>
+                    <th>
+                        @i.Child.Username
+                    </th>
+                    <th>
+                        @i.AppointmentType.Name
+                    </th>
+                    <th>
+                        @i.AppointmentDate
+                    </th>
+                    <th>
+                        <a href="/pedia/appointment/@i.Id" class="btn-success btn"><i class="bi bi-chat-fill"></i> Chat</a>
+                        <a href="/prescribe/@i.Id" class="btn-success btn"><i class="bi bi-file-break-fill"></i> Prescribe</a>
+                    </th>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    
+    <div class="alert alert-danger" role="alert">
+        No parent has requested an appointment, yet!
+    </div>
+}

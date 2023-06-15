@@ -1,0 +1,54 @@
+﻿@page
+@using BabyPedia.Data
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+
+@inject BabyPediaContext DbContext
+@inject UserManager<IdentityUser> UserManager;
+@{
+    ViewData["Registered"] = true;
+    Layout = "_Layout";
+
+    const int logCount = 10;
+    var users = await UserManager.Users.ToListAsync();
+
+    var logs = await DbContext.AuditLogs.ToListAsync();
+    logs = logs.Where(x => !string.IsNullOrWhiteSpace(x.UserId)).Take(logCount).ToList();
+}
+
+<div class="container overflow-hidden">
+    <h1 class="text-center">
+        <p class="text-center fw-bold text-primary">
+            Audit Log
+        </p>
+    </h1>
+    <p>Below is the @logCount most recent audit logs, to view all @(await DbContext.AuditLogs.CountAsync()) logs please download it below.</p>
+    <a href="/admin/download/logs" class="m-2 btn text-dark fw-bold" style="background-color: #FF9E7A !important;"><i class="bi bi-file-earmark-arrow-down-fill"></i> Export All Audit Log</a>
+    <table class="table m-2 container w-100">
+        <thead>
+        <tr>
+            <th scope="col">Log ID</th>
+            <th scope="col">Table Name</th>
+            <th scope="col">Date and Time</th>
+            <th scope="col">User Id</th>
+            <th scope="col">User Email</th>
+            <th scope="col">Column Name</th>
+            <th scope="col">Change Value</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var i in logs)
+        {
+            <tr>
+                <th scope="row">@i.Id</th>
+                <td>@i.Table</td>
+                <td>@i.UpdateTime</td>
+                <td>@i.UserId</td>
+                <td>@(users.FirstOrDefault(x => x.Id == i.UserId)?.Email)</td>
+                <td>@i.TableColumn</td>
+                <td>@i.NewValue</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

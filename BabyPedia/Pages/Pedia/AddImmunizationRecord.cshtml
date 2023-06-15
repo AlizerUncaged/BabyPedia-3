@@ -1,0 +1,80 @@
+﻿@page
+@using BabyPedia.Data
+@using BabyPedia.Models
+@using Microsoft.EntityFrameworkCore
+@model BabyPedia.Models.ImmunizationRecord
+@inject BabyPediaContext BabyPediaContext
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Registered"] = true;
+    Layout = "_Layout";
+
+    var children = await BabyPediaContext.Children.ToListAsync();
+    var vaccines = await BabyPediaContext.Vaccines.ToListAsync();
+
+    Child? selectedChildren = null;
+
+    if (HttpContextAccessor.HttpContext.Request.Query.TryGetValue("id", out var id))
+    {
+        
+        selectedChildren = children.FirstOrDefault(x => x.Id == long.Parse(id));
+    }
+
+    var textBoxClasses = new Dictionary<string, object>()
+    {
+        { "class", "form-control" },
+        { "required", "" },
+        // { "readonly", "readonly" },
+    };
+
+}
+
+<div class="text-center container-fluid row text-primary">
+    <h1 class="display-4 long-rounded fw-bold">New Immunization Entry</h1>
+</div>
+<form class="container-fluid row" method="post" action="/add-immunization">
+    <div class="col-md-6 col-12">
+        <div class="form-floating mb-3">
+            <select class="form-select" aria-label="Child's Name" name="childId" id="child">
+                <option selected value="@selectedChildren?.Id">@(selectedChildren is {} ? selectedChildren?.Username : "Select a child")</option>
+                @foreach (var i in children)
+                {
+                    <option value="@i.Id">@i.Username</option>
+                }
+            </select>
+            <label for="child">Child Name</label>
+        </div>
+        <div class="form-floating mb-3">
+            <select class="form-select" aria-label="Vaccine Name" name="vaccineId">
+                <option selected>Select a vaccine</option>
+                @foreach (var i in vaccines)
+                {
+                    <option value="@i.Id">@i.Name</option>
+                }
+            </select>
+            <label>Select a pedia</label>
+        </div>
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.DoseNumber, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.DoseNumber)
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.Date, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.Date)
+        </div>
+    </div>
+    <div class="col-md-6 col-12">
+
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.Remarks, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.Remarks)
+        </div>
+        <div class="flex-column d-flex justify-content-between">
+            <button class="btn btn-primary">
+                <i class="bi bi-arrow-bar-right"></i> Confirm
+            </button>
+        </div>
+    </div>
+</form>

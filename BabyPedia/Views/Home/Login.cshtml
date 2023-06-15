@@ -1,0 +1,48 @@
+﻿@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+
+@if (HttpContextAccessor.HttpContext.Request.Query.TryGetValue("error", out var errorString))
+{
+    <div class="alert alert-danger" role="alert">
+        @errorString
+    </div>
+}
+
+@if (HttpContextAccessor.HttpContext.Request.Query.TryGetValue("info", out var info))
+{
+    <div class="alert alert-info" role="alert">
+        @info
+    </div>
+}
+
+<div class="container-fluid row">
+    <div class="col-md-6 col-12 my-auto fw-bold">
+        <form method="post" action="/login">
+            <h1 class="display-4 long-rounded fw-bold text-start text-primary">Login</h1>
+            <p class="fw-bold text-dark text-start">
+                Sign in to access your BabyPedia account.
+            </p>
+            <div class="form-floating mb-3">
+                <input required name="username" type="text" class="form-control" id="username">
+                <label for="username">Username</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input required name="password" type="password" class="form-control" id="password">
+                <label for="password">Password</label>
+            </div>
+            <div class="flex-column d-flex justify-content-between">
+                <a href="/reset/password/view" class="mb-2 nav-link">I forgot my password</a>
+                <button class="btn btn-primary">
+                    <i class="bi bi-arrow-bar-right"></i> Login
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-6 col-12">
+        <img src="~/images/327861143_666198605252374_4836121851101944564_n.jpg"/>
+    </div>
+</div>

@@ -1,0 +1,62 @@
+﻿@using BabyPedia.Data
+@using BabyPedia.Utilities
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@inject BabyPediaContext DbContext
+@inject UserManager<IdentityUser> UserManager
+@model PartneredPedia 
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+
+}
+
+
+<div class="container">
+    <h1 class="text-center">
+        <p class="text-center fw-bold text-primary">
+            Verification
+        </p>
+    </h1>
+    <div class="rounded-3 m-2 fw-bold p-3 container-fluid row">
+        <div class="col">
+            <p class="row">
+                First Name: @Model.FirstName
+            </p>
+            <p class="row">
+                Last Name: @Model.LastName
+            </p>
+            <p class="row">
+                Email: @Model.Email
+            </p>
+            <p class="row">
+                Address: @Model.Address
+            </p>
+            <p class="row m-4">
+
+            </p>
+            <p class="row text-@(Model.IsVerified ? "success" : "danger")">
+                Status: @(Model.IsVerified ? "VERIFIED" : "PENDING")
+            </p>
+        </div>
+        <div class="col">
+            <p class="row">
+                Contact Number: @Model.ContactNumber
+            </p>
+            <p class="row">
+                PRC License Number: @Model.PrcLicenseNumber
+            </p>
+            <p class="row">
+                PRC Expiration Date: @Model.PrcExpiration
+            </p>
+        </div>
+    </div>
+</div>
+<div class="row container">
+    @if (Model.IsVerified)
+    {
+        <p class="text-danger">User is already verified, clicking the button below will unverify the user!</p>
+    }
+    <a href="/confirm/@Model.Id" class="btn-success btn m-2">Confirm</a>
+</div>

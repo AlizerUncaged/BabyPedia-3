@@ -1,0 +1,32 @@
+﻿@model BabyPedia.Models.Vaccine
+
+@{
+    ViewBag.Title = Model.Name;
+    Layout = "_Layout";
+}
+
+
+<div class="container-fluid">
+    <h1 class="text-center fw-bold text-primary row w-100 container-fluid">@Model.Name</h1>
+    <div class="container row text-light">
+        <div class="col">
+            <h4 class="text-primary">Recommended Age</h4>
+        </div>
+        <div class="col">
+            <p class="rounded-3 bg-secondary p-2">@Model.RecommendedAge years old</p>
+        </div>
+    </div>
+    <div class="row container text-light">
+        <h4 class="text-primary row">Diseases</h4>
+        <p class="rounded-3 bg-secondary p-2">@Model.Disease</p>
+    </div>
+    <div class="row container text-light">
+        <h4 class="text-primary row">Symtomps</h4>
+        <p class="rounded-3 bg-secondary p-2">@Model.DiseaseSymptoms</p>
+    </div>
+    <div class="row container text-light">
+        <h4 class="text-primary row">Complications</h4>
+        <p class="rounded-3 bg-secondary p-2">@Model.DiseaseComplications</p>
+    </div>
+    
+</div>

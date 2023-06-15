@@ -1,0 +1,40 @@
+﻿@page
+@using BabyPedia.Data
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+
+@inject BabyPediaContext DbContext
+@inject UserManager<IdentityUser> UserManager
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewBag.Title = "Vaccine Search";
+    Layout = "_Layout";
+
+    string queryString = string.Empty;
+    var query = HttpContextAccessor?.HttpContext?.Request.Query["search"];
+    if (!string.IsNullOrWhiteSpace(query))
+        queryString = query;
+
+    var vaccines = await DbContext.Vaccines.Where(x => x.Name.Contains(queryString)).ToListAsync();
+}
+
+<form method="get" class="mb-3" action="?">
+
+    <div class="form-floating mb-3">
+        <input  required name="search" type="text" class="form-control" id="search">
+        <label for="search">Vaccine Name</label>
+    </div>
+    <button class="btn btn-primary me-auto">
+        <i class="bi bi-search"></i> Search Vaccine
+    </button>
+</form>
+
+<div class="d-flex flex-column">
+    @foreach (var v in vaccines.DistinctBy(x => x.Name))
+    {
+        <a class="btn btn-secondary mb-2" href="/vaccines/@v.Id">
+            @v.Name - @v.Manufacturer
+        </a>
+    }
+</div>

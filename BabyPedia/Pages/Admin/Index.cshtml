@@ -1,0 +1,114 @@
+﻿@page
+@model BabyPedia.Pages.Admin.Index
+
+@using BabyPedia.Data
+@using BabyPedia.Models
+@using BabyPedia.Utilities
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@inject BabyPediaContext DbContext
+@inject UserManager<IdentityUser> UserManager
+@inject IHttpContextAccessor ContextAccessor
+
+@{
+    ViewData["Registered"] = true;
+    Layout = "_Layout";
+
+    var parents = await UserManager.Users.OfType<Parent>().ToListAsync();
+    var partneredPedias = await UserManager.Users.OfType<PartneredPedia>().ToListAsync();
+    var allUsers = parents.Concat<IdentityUser>(partneredPedias).ToList();
+
+    var message = ContextAccessor.HttpContext.Request.Query["message"];
+
+
+}
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-success" role="alert">
+        @message
+    </div>
+}
+<div class="container">
+    <h1 class="text-center">
+        <p class="text-center fw-bold text-primary">
+            User Management
+        </p>
+    </h1>
+    <div class="container-fluid row">
+        <div class="d-flex flex-row">
+            <a href="/admin/newuser" class="m-2 btn text-dark" style="background-color: #FF9E7A !important;">New User</a>
+            <a href="/admin/sendEmail" class="btn m-2 text-dark" style="background-color: #FF9E7A !important;">Send Email</a>
+            @* <a class="btn m-2 text-dark" style="background-color: #0B82D1 !important;">Confirm Subscription</a> *@
+            <a href="/admin/auditlog" class="btn m-2 text-dark" style="background-color: #FF9E7A !important;">View Audit Log</a>
+        </div>
+        <table class="table m-2">
+            <thead>
+            <tr>
+                <th scope="col">Type</th>
+                <th scope="col">Username</th>
+                <th scope="col">Email</th>
+                <th scope="col">Date and Time Created</th>
+                <th scope="col">Last Login</th>
+                <th scope="col">Verification Status</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var user in allUsers)
+            {
+                dynamic dynamicUser = user;
+
+                if (user is Parent parent)
+                    dynamicUser = parent;
+
+                if (user is PartneredPedia partneredPedia)
+                    dynamicUser = partneredPedia;
+
+                <tr>
+                    <td>
+                        @{
+                            if (user is Parent)
+                            {
+                                <p>Parent</p>
+                            }
+                            else if (user is PartneredPedia)
+                            {
+                                <p>Pedia</p>
+                            }
+                            else if (user is Child)
+                            {
+                                <p>Child</p>
+                            }
+                        }
+                    </td>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>
+                        @dynamicUser.DateTimeCreated
+                    </td>
+                    <td>@DateTime.Now</td>
+                    <td class="text-center">
+                        @if (dynamicUser is PartneredPedia)
+                        {
+                            <button class="btn mx-auto btn-@(dynamicUser.IsVerified ? "success" : "danger")">
+                                @(dynamicUser.IsVerified ? "Verified" : "Not Verified")
+                            </button>
+                        }
+                    </td>
+                    <td class="text-center">
+                        @if (dynamicUser is PartneredPedia partneredPedia2)
+                        {
+                            <a href="/verify/@partneredPedia2.Id" class="btn mx-auto me-2 mb-2 btn-@(!dynamicUser.IsVerified ? "success" : "danger")">
+                                @(!dynamicUser.IsVerified ? "Verify" : "Unverify")
+                            </a>
+                        }
+
+                        <a href="/user/delete/@user.Id" class="btn  me-2 mb-2  text-light" style="background-color: #0B82D1 !important;">Delete User</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

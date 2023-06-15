@@ -1,0 +1,74 @@
+﻿@model Appointment
+
+@{
+    ViewBag.Title = "Prescribe";
+    Layout = "_Layout";
+
+
+    var textBoxClasses = new Dictionary<string, object>()
+    {
+        { "class", "form-control" },
+        { "required", "" },
+        // { "readonly", "readonly" },
+    };
+
+
+    var textBoxClassesReadonly = new Dictionary<string, object>()
+    {
+        { "class", "form-control" },
+        { "readonly", "readonly" },
+    };
+}
+
+<div class="text-center container-fluid row text-primary">
+    <h1 class="display-4 long-rounded fw-bold">Prescription</h1>
+    <p class="fw-bold text-dark">
+        Prescribe Medication
+    </p>
+</div>
+
+<form class="container-fluid row" method="post" action="/prescribe/add">
+    <div class="col-md-6 col-12">
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.Id, htmlAttributes: textBoxClassesReadonly)
+            @Html.LabelFor(x => x.Id)
+        </div>
+        <div class="form-floating mb-3">
+            <input required type="text" readonly="readonly" class="form-control" id="cus" name="cus" value="@Model.Child.Username">
+            <label for="cus">Child Name</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input required type="text" readonly="readonly" class="form-control" id="cusf" name="cusf" value="@Model.Parent.FirstName @Model.Parent.LastName">
+            <label for="cusf">Parent Name</label>
+        </div>
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.AppointmentType.Name, htmlAttributes: textBoxClassesReadonly)
+            <label for="AppointmentType">Appointment Type</label>
+        </div>
+    </div>
+    <div class="col-md-6 col-12">
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.AppointmentTime, htmlAttributes: textBoxClassesReadonly)
+            <label for="AppointmentTime">Appointment Time</label>
+        </div>
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.AppointmentDate, htmlAttributes: textBoxClassesReadonly)
+            <label for="AppointmentDate">Appointment Date</label>
+        </div>
+        <div class="form-floating mb-3">
+            @Html.TextAreaFor(m => m.Prescription, new { @class = "form-control", rows = 4 })
+            @Html.LabelFor(x => x.Prescription)
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.MeetLink, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.MeetLink)
+        </div>
+
+        <div class="flex-column d-flex justify-content-between">
+            <button class="btn btn-primary" type="submit">
+                <i class="bi bi-arrow-bar-right"></i> Send Prescription
+            </button>
+        </div>
+    </div>
+</form>

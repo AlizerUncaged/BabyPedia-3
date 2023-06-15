@@ -1,0 +1,57 @@
+﻿@page
+@using BabyPedia.Data
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@inject BabyPediaContext BabyPediaContext
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewBag.Title = "Patient Record";
+    Layout = "_Layout";
+
+    var children = await BabyPediaContext.Children.Where(x => x.Parent.Id == UserManager.GetUserId(User)).ToListAsync();
+}
+
+
+<div class="mx-auto mt-4">
+    <h1 class="text-center">
+        <p class="text-center fw-bold text-primary">
+            @ViewBag.Title
+        </p>
+    </h1>
+    @if (children.Any())
+    {
+        <table class="table m-2 table-borderless">
+            <thead>
+            <tr>
+                <th scope="col" class="text-primary">Child's Name</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var i in children)
+            {
+                <tr>
+                    <th scope="row" class="">@i.Username</th>
+                    <th>
+                        <a href="/parent/childinformation/@i.Id" class="btn btn-primary border-0" style="background-color: #FF9E7A !important;">Child Information</a>
+                    </th>
+                    <th>
+                        <a href="/parent/immunizationrecord/@i.Id" class="btn btn-primary border-0" style="background-color: #1C88C6 !important;">Immunization Record</a>
+                    </th>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-danger" role="alert">
+            You have no children registered!
+        </div>
+    }
+
+    <a href="/parent/childinformation" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Add Child
+    </a>
+</div>

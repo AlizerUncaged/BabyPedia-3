@@ -1,0 +1,144 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model Appointment
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewBag.Title = "Chat With";
+    Layout = "_Layout";
+
+    var currentUser = await UserManager.GetUserAsync(User);
+}
+<h1 class="text-center">
+    <p class="text-center fw-bold text-primary">
+        Contact @(User.IsInRole("Pedia") ? "Client" : "Pedia")
+    </p>
+</h1>
+<div class="container-fluid row">
+    <div class="col">
+        <div class="container">
+            <div style="background-color: #F9909C !important;" class="rounded-3 m-2 fw-bold p-3 container-fluid row">
+                <div class="col">
+                    @if (User.IsInRole("Pedia"))
+                    {
+                        <p class="row">
+                            Patient Name: @Model.Child.Username
+                        </p>
+                    }
+                    else if (User.IsInRole("Parent"))
+                    {
+                        <p class="row">
+                            Pedia Name: @Model.Pedia.FirstName @Model.Pedia.LastName
+                        </p>
+                    }
+                    <p class="row">
+                        Service: @Model.AppointmentType.Name
+                    </p>
+                    <p class="row">
+                        Date: @Model.AppointmentDate
+                    </p>
+                </div>
+                <div class="col">
+                    <p class="row">
+                        Service: @Model.AppointmentType.Name
+                    </p>
+                    <p class="row">
+                        Time: @Model.AppointmentTime
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="container d-flex flex-row">
+            <a href="/prescriptions/@Model.Id" class="btn-primary btn m-2"><i class="bi bi-capsule"></i> View Prescription</a>
+            @* <a href="" class="btn-success btn m-2">Download</a> *@
+            <a href="" class="btn-danger btn m-2"><i class="bi bi-camera-video"></i> Launch Meeting</a>
+        </div>
+    </div>
+    <div class="col">
+        <div class="container-fluid">
+            <div id="messagesList" class="w-100 rounded-3 mb-4 p-2 overflow-hidden" style="min-height: 500px; max-height: 50vh"></div>
+            <div class="input-group mb-3 rounded-3">
+                <input id="messageInput" type="text" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                <button id="sendButton" class="btn btn-primary" type="button"><i class="bi bi-send-fill"></i> Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+
+<script>
+    const connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+    
+    connection.start().then(function () {
+        document.getElementById("sendButton").disabled = false;
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+    
+    
+    var targetUser = '@(Model.Pedia.Id)';
+    var currentUser = '@(UserManager.GetUserId(User))';
+    
+    function isEmptyOrSpaces(str){
+        return str === null || str.match(/^ *$/) !== null;
+    }
+
+    connection.on("ReceiveMessage", function (from, user, message) {
+        var msg = message.replace(/&/g, "&").replace(/&/g, ">");
+        console.log(`From: ${from} target: ${targetUser} User: ${user}, me: ${currentUser}`)
+        var encodedMsg = msg;
+        let messageHtml = null;
+        if (user === currentUser && from === targetUser)
+        messageHtml = `
+                <div class="d-flex flex-row-reverse  bd-highlight mb-3">
+                          <div class=" bd-highlight shadow rounded-3  p-2">
+                            <p class="opacity-50">@currentUser.UserName</p>
+                            <p class="m-0 p-0 my-auto ms-2">${encodedMsg}</p>          
+                            </div>
+                </div>
+        `;
+        else if (from === currentUser && user === targetUser)
+            {
+                 messageHtml = `
+                <div class="d-flex flex-row bd-highlight mb-3">
+                          <div class=" bd-highlight shadow rounded-3   p-2">
+                                <p class="opacity-50">@Model.Pedia.UserName</p>
+                                <p class="m-0 p-0 my-auto ms-2">${encodedMsg}</p>          
+                         </div>
+                 </div>
+                        `;
+            }
+        if (!isEmptyOrSpaces(messageHtml))
+            document.getElementById("messagesList").innerHTML += messageHtml;
+    });
+    
+    document.getElementById("messageInput").onkeyup = function(ev) {
+      if (ev.keyCode == 13)
+          {
+              document.getElementById('sendButton').click()
+          }
+    };
+    
+    const targetUserId =  '@(Model.Pedia.Id)';
+    const signedInUserId = '@(UserManager.GetUserId(User))';
+    
+    document.getElementById("sendButton").addEventListener("click", function (event) {
+        var message = document.getElementById("messageInput").value;
+        document.getElementById("messageInput").value = "";
+        connection.invoke("SendMessage", targetUserId, currentUser, message).catch(function (err) {
+            return console.error(err.toString());
+        });
+        
+        // Save chat.
+        (async () => {
+            const response = await fetch(`/chat/${targetUserId}?` + new URLSearchParams({
+                message: message
+            }), {
+                method : "POST"
+            })
+       
+            console.log(data)
+        })()
+        
+        event.preventDefault();
+    });
+</script>

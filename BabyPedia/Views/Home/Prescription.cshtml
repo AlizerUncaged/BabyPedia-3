@@ -1,0 +1,88 @@
+﻿@model Appointment
+
+@{
+    ViewData["Title"] = "Prescription";
+    Layout = "_Layout";
+}
+
+@if (!string.IsNullOrWhiteSpace(Model.Prescription))
+{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js" integrity="sha512-csNcFYJniKjJxRWRV1R7fvnXrycHP6qDR21mgz1ZP55xY5d+aHLfo9/FcGDQLfn2IfngbAHd8LdfsagcCqgTcQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <div class="container d-flex flex-row">
+        <button id="saveBtn" class="btn btn-primary" onclick="screenshotAndDownload()"><i class="bi bi-download"></i> Download</button>
+    </div>
+    <div class="container-fluid row">
+        <div id="prescription" class="container bg-light d-flex flex-column align-items-center" style="max-width: 500px">
+            <header class="w-100 d-flex justify-content-center p-3">
+                <img class="img-fluid" src="~/images/logo.jpg" alt="Hospital Logo"/>
+                <div class="d-flex align-items-center">
+                </div>
+            </header>
+            <div class="d-flex justify-content-between container-fluid">
+                <p class="fw-bold">@Model.Parent.FirstName @Model.Parent.LastName</p>
+                <p class="">@Model.DateTimeCreated.ToString("MMMM d, yyyy").Trim()</p>
+            </div>
+            <div class="d-flex justify-content-between container-fluid">
+                <p class="fw-bold">CONSULTATION</p>
+                <p class="">@DateTime.Parse(Model.AppointmentDate).ToString("MMMM d, yyyy").Trim()</p>
+            </div>
+            <main class="w-100 my-5 border-top border-bottom">
+                <h1 class="text-center m-2">PRESCRIPTION</h1>
+            </main>
+            <div class="w-100" style="min-height: 300px">
+                <img src="/images/medical-symbol-rx-signage-template-free-vector.webp" style="max-width: 150px"/>
+                @Model.Prescription
+            </div>
+            <footer class="w-100 d-flex justify-content-between p-3">
+                <p></p>
+                <p class="text-center">
+                    Dr. @Model.Pedia.FirstName @Model.Pedia.LastName<br/>
+                    Department of Pediatric<br/>
+                    PRC NO.: @Model.Pedia.PrcLicenseNumber
+                </p>
+            </footer>
+        </div>
+    </div>
+    <script>
+    
+    function screenshotAndDownload(){
+        let c = document.getElementById("prescription") // or document.getElementById('canvas');
+        html2canvas(c).then((canvas)=>{
+          var t = canvas.toDataURL().replace("data:image/png;base64,", "");
+          this.downloadBase64File('image/png',t,'image');
+        })
+      }
+    
+ function   downloadBase64File(contentType, base64Data, fileName) {
+      const linkSource = `data:${contentType};base64,${base64Data}`;
+      const downloadLink = document.createElement("a");
+      downloadLink.href = linkSource;
+      downloadLink.download = fileName;
+      downloadLink.click();
+    }
+    
+        $(function() { 
+            $("#saveBtn").click(function() { 
+                console.log("Downloading")
+                html2canvas(document.getElementById("prescription"), {
+                    onrendered: function(canvas) {
+                        theCanvas = canvas;
+        
+        
+                        canvas.toBlob(function(blob) {
+                            saveAs(blob, "Dashboard.png"); 
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}
+else
+{
+    <div class="alert alert-danger" role="alert">
+        You haven't been prescribed yet.
+    </div>
+}

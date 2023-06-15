@@ -1,0 +1,62 @@
+﻿@using BabyPedia.Data
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+
+@inject BabyPediaContext DbContext
+@inject UserManager<IdentityUser> UserManager
+@model BabyPedia.Models.Appointment
+
+@{
+    // var currentParent = await DbContext.Parents
+    //     .Include(x => x.Appointments)
+    //     .ThenInclude(x => x.AppointmentType)
+    //     .Include(x => x.Appointments)
+    //     .ThenInclude(x => x.Pedia)
+    //     .Include(x => x.Appointments)
+    //     .ThenInclude(x => x.Child)
+    //     .Include(x => x.Appointments)
+    //     .ThenInclude(x => x.Payment)
+    //     .FirstOrDefaultAsync(x => x.Id == UserManager.GetUserId(User));
+
+    ViewData["Registered"] = true;
+    Layout = "_Layout";
+}
+
+
+<div class="container">
+    <h1 class="text-center">
+        <p class="text-center fw-bold text-primary">
+            Current Appointment
+        </p>
+    </h1>
+    <p style="background-color: #C1EBC2 !important; color: #82D586" class="fw-bold rounded-3 p-2 container-fluid row m-2">Payment Successful! Launch meeting button will be clickable once doctor is ready!</p>
+    <div style="background-color: #F9909C !important;" class="rounded-3 m-2 fw-bold p-3 container-fluid row">
+        <div class="col">
+            <p class="row">
+                Name of pediatrician: @Model.Pedia.FirstName @Model.Pedia.LastName
+            </p>
+            <p class="row">
+                Service: @Model.AppointmentType.Name
+            </p>
+            <p class="row">
+                Date: @Model.AppointmentDate
+            </p>
+            <p class="row">
+                Time: @Model.AppointmentTime
+            </p>
+        </div>
+        <div class="col">
+            <p class="row">
+                Patient Name: @Model.Parent.FirstName @Model.Parent.LastName
+            </p>
+            <p class="row">
+                Service: @Model.AppointmentType.Name
+            </p>
+        </div>
+    </div>
+</div>
+<div class="row container">
+    <a href="/prescriptions/@Model.Id" class="btn-primary btn m-2"><i class="bi bi-eye-fill"></i> View Prescription</a>
+    @* <a href="" class="btn-success btn m-2">Download</a> *@
+    <a href="@Model.MeetLink" class="btn-danger btn m-2"><i class="bi bi-camera-video"></i> Launch Meeting</a>
+</div>

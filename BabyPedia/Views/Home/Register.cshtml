@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Registration";
+}
+
+<div class="text-center">
+    <div class="container-fluid row">
+        <div class="col-4 position-relative">
+            <a class="btn btn-danger fw-bold text-dark top-50 position-absolute" href="@Url.Action("ParentRegistration", "Registration")">
+                <svg style="max-width: 35px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <title>account-child</title><path d="M12,2A3,3 0 0,1 15,5A3,3 0 0,1 12,8A3,3 0 0,1 9,5A3,3 0 0,1 12,2M12,9C13.63,9 15.12,9.35 16.5,10.05C17.84,10.76 18.5,11.61 18.5,12.61V18.38C18.5,19.5 17.64,20.44 15.89,21.19V19C15.89,18.05 15.03,17.38 13.31,16.97C12.75,16.84 12.31,16.78 12,16.78C11.13,16.78 10.3,16.95 9.54,17.3C8.77,17.64 8.31,18.08 8.16,18.61C9.5,19.14 10.78,19.41 12,19.41L13,19.31V21.94L12,22C10.63,22 9.33,21.72 8.11,21.19C6.36,20.44 5.5,19.5 5.5,18.38V12.61C5.5,11.61 6.16,10.76 7.5,10.05C8.88,9.35 10.38,9 12,9M12,11A2,2 0 0,0 10,13A2,2 0 0,0 12,15A2,2 0 0,0 14,13A2,2 0 0,0 12,11Z"/>
+                </svg> Register as Parent
+            </a>
+        </div>
+        <div class="col-4">
+            <img class="img-fluid mx-auto" style="min-width: 150%" src="~/images/home_register.jpg"/>
+        </div>
+        <div class="col-4 position-relative">
+            <a class="btn btn-warning fw-bold top-50 position-absolute" href="@Url.Action("PediaRegistration", "Registration")">
+                <svg style="max-width: 35px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <title>stethoscope</title><path d="M19,8C19.56,8 20,8.43 20,9A1,1 0 0,1 19,10C18.43,10 18,9.55 18,9C18,8.43 18.43,8 19,8M2,2V11C2,13.96 4.19,16.5 7.14,16.91C7.76,19.92 10.42,22 13.5,22A6.5,6.5 0 0,0 20,15.5V11.81C21.16,11.39 22,10.29 22,9A3,3 0 0,0 19,6A3,3 0 0,0 16,9C16,10.29 16.84,11.4 18,11.81V15.41C18,17.91 16,19.91 13.5,19.91C11.5,19.91 9.82,18.7 9.22,16.9C12,16.3 14,13.8 14,11V2H10V5H12V11A4,4 0 0,1 8,15A4,4 0 0,1 4,11V5H6V2H2Z"/>
+                </svg> Register as Pediatrician
+            </a>
+        </div>
+    </div>
+
+</div>

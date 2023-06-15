@@ -1,0 +1,40 @@
+﻿@page
+@model BabyPedia.Pages.Admin.SendEmail
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Registered"] = true;
+    Layout = "_Layout";
+}
+
+@if (HttpContextAccessor.HttpContext.Request.Query.TryGetValue("info", out var info))
+{
+    <div class="alert alert-info" role="alert">
+        @info
+    </div>
+}
+
+<form class="container" method="post" action="/admin/emails/send">
+    <h1 class="text-center">
+        <p class="text-center fw-bold text-primary">
+            Send Email
+        </p>
+    </h1>
+
+    
+    <div class="form-floating mb-3">
+        <input  required name="email" type="text" class="form-control" id="email">
+        <label for="email">Recipient</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input  required name="subject" type="text" class="form-control" id="sub">
+        <label for="sub">Subject</label>
+    </div>
+    <div class="form-floating mb-3">
+        <textarea  required name="message" type="text" class="form-control" id="sub">
+    </textarea>
+        <label for="sub">Message</label>
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">Send</button>
+    </div>
+</form>

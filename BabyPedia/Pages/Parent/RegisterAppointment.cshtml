@@ -1,0 +1,152 @@
+﻿@page
+@using BabyPedia.Data
+@using BabyPedia.Utilities
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@model BabyPedia.Pages.Parent.RegisterAppointment
+@inject BabyPediaContext DbContext
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "New Appointment";
+
+    var pedias = await DbContext.PartneredPedias.ToListAsync();
+    var children = await DbContext.Children.Where(x => x.Parent.Id == UserManager.GetUserId(User)).ToListAsync();
+}
+
+<script src="https://www.paypal.com/sdk/js?client-id=AbhPFeMhKFkyF6Xv-9ft8iO5HPmYcYTLA8QeZXmfA5Yqwl8MDbJtrpsOKaLT37Le0tTzR9ssUM1uLxqD"></script>
+
+<div class="row">
+    <div class="container">
+        <form id="registerForm" action="/register-appointment" method="post">
+            <h2 class="mt-2">Create a new appointment.</h2>
+            <p>
+                Create an appointment below, specify the date as well as a message to the pedia.
+            </p>
+            <hr/>
+            <div class="form-floating mb-3">
+                <input  required id="birthdate-id" type="date" name="date" class="form-control" aria-required="true"/>
+                <label for="birthdate-id">Date of Visit</label>
+            </div>
+
+            @if (children.Any())
+            {
+                <select class="form-select mb-3" name="child">
+                    <option selected>Select a child</option>
+                    @foreach (var child in children)
+                    {
+                        <option value="@child.Id">@child.Username</option>
+                    }
+                </select>
+            }
+            else
+            {
+                <div class="alert alert-danger" role="alert">
+                    No Children Registered! <a href="/parent/childinformation" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Add Child</a>
+                </div>
+            }
+
+            <div class="form-floating mb-3">
+                <input  required id="birthdate-id2" type="time" name="time" class="form-control" aria-required="true"/>
+                <label for="birthdate-id2">Time of Visit</label>
+            </div>
+            <div class="form-floating mb-3">
+                <textarea required  style="height: 150px;" id="desc" rows="5" type="text" name="description" class="form-control" autocomplete="off" aria-required="true" placeholder=""></textarea>
+                <label for="desc">Message</label>
+            </div>
+
+            <div class="mb-3">
+                <select class="form-select" name="appointmentType">
+                    <option selected>Appointment Type</option>
+                    <option value="Vaccination">Vaccination</option>
+                    <option value="Consultation">Consultation</option>
+                    <option value="Home Service">Home Service</option>
+                </select>
+            </div>
+
+            @if (pedias.Any())
+            {
+                <select class="form-select" name="pedia">
+                    <option selected>Select a pedia</option>
+                    @foreach (var pedia in pedias)
+                    {
+                        <option value="@pedia.Id">@pedia.FirstName @pedia.LastName</option>
+                    }
+                </select>
+            }
+            else
+            {
+                <div class="alert alert-danger" role="alert">
+                    There are no pedias registered!
+                </div>
+            }
+
+            @* <button style="background-color: #FF9E7A !important;" id="registerSubmit" type="button" class="w-100 m-2 btn btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-hand-thumbs-up-fill"></i> Submit</button> *@
+        
+            <div class="container-fluid my-2 d-flex flex-row justify-content-center p-0">
+                <div id="paypal-button" class="mx-auto">
+                    <h2>Pay via Paypal!</h2>
+                </div>
+            </div>
+            <script>
+              paypal.Buttons({
+                createOrder: function(data, actions) {
+                  return actions.order.create({
+                    purchase_units: [{
+                      amount: {
+                        value: '20.00'
+                      }
+                    }]
+                  });
+                },
+                onApprove: function(data, actions) {
+                    
+                  return actions.order.capture().then(function(details) {
+                    // Send the details to your server for verification
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "/api/verifyPayment");
+                    xhr.setRequestHeader("Authorization", "Bearer <YOUR_ACCESS_TOKEN>");
+                    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                    xhr.onload = function() {
+                      if (xhr.status === 200) {
+                          location.reload()
+                      } else {
+                        alert("Payment verification failed!");
+                      }
+                    };
+                    xhr.send(JSON.stringify(details));
+                    document.getElementById("registerForm").submit();
+                  });
+                }
+              }).render('#paypal-button');
+    </script>
+
+            @* <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"> *@
+            @*     <div class="modal-dialog"> *@
+            @*         <div class="modal-content"> *@
+            @*             <div class="modal-header"> *@
+            @*                 <h5 class="modal-title" id="exampleModalLabel"><i class="bi bi-send-fill"></i> Submit</h5> *@
+            @*                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> *@
+            @*             </div> *@
+            @*             <div class="modal-body"> *@
+            @*                 $1$ <div class="input-group mb-3"> #1# *@
+            @*                 $1$     <span class="input-group-text" id="basic-addon1">₱</span> #1# *@
+            @*                 $1$     <input disabled value="600.00" type="text" class="form-control" aria-describedby="basic-addon1"> #1# *@
+            @*                 $1$ </div> #1# *@
+            @*                 <div class="input-group mb-3"> *@
+            @*                     <span class="input-group-text">₱</span> *@
+            @*                     <input id="user-payment" name="paid" type="text" class="form-control" aria-describedby="basic-addon1"> *@
+            @*                     <label class="form-control" for="user-payment">Your Payment</label> *@
+            @*                 </div> *@
+            @*             </div> *@
+            @*             <div class="modal-footer"> *@
+            @*                 <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Pay</button> *@
+            @*                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button> *@
+            @*             </div> *@
+            @*         </div> *@
+            @*     </div> *@
+            @* </div> *@
+        </form>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+﻿@using BabyPedia.Data
+@using Microsoft.AspNetCore.Identity
+@model BabyPedia.Models.Child
+
+@inject BabyPediaContext BabyPediaContext
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    ViewData["Registered"] = true;
+    Layout = "_Layout";
+
+    var textBoxClasses = new Dictionary<string, object>()
+    {
+        { "class", "form-control" },
+        // { "readonly", "readonly" },
+    };
+}
+
+<div class="text-center container-fluid row text-primary">
+    <h1 class="display-4 long-rounded fw-bold">@Model.Username's Immunization Record</h1>
+</div>
+
+<div class="mx-auto mt-4">
+    @if (Model.ImmunizationRecord.Any())
+    {
+        <table class="table m-2 table-borderless">
+            <thead>
+            <tr>
+                <th scope="col">Vaccine Name</th>
+                <th scope="col">Done Number</th>
+                <th scope="col">Date</th>
+                <th scope="col">Remarks</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var i in Model.ImmunizationRecord)
+            {
+                <tr>
+                    <th scope="row" class="">@i.Vaccine</th>
+                    <th scope="row" class="">@i.DoseNumber</th>
+                    <th scope="row" class="">@i.Date</th>
+                    <th scope="row" class="">@i.Remarks</th>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-danger" role="alert">
+            No immunization records!
+        </div>
+    }
+
+    @if (User.IsInRole("Pedia"))
+    {
+        <a href="/pedia/addimmunizationrecord?id=@Model.Id" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Add Entry
+        </a>
+    }
+</div>

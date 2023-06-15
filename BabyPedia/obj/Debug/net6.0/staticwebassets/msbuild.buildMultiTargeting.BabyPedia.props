@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\BabyPedia.props" />
+</Project>

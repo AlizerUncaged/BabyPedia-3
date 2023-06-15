@@ -1,0 +1,59 @@
+﻿<Properties StartupConfiguration="{AF958682-D9DB-48B2-9C5C-545FE17FDD4A}|Default" GitUserInfo="UsingGIT">
+  <MonoDevelop.Ide.ItemProperties.BabyPedia PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="BabyPedia/Controllers/RegistrationController.cs">
+    <Files>
+      <File FileName="BabyPedia/Views/Home/ChildInformation.cshtml" />
+      <File FileName="BabyPedia/Models/Child.cs" />
+      <File FileName="BabyPedia/Controllers/RegistrationController.cs" Line="188" Column="17" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="BabyPedia" expanded="True">
+            <Node name="BabyPedia" expanded="True" selected="True">
+              <Node name="Dependencies" expanded="True" />
+              <Node name="Areas" expanded="True">
+                <Node name="Identity" expanded="True">
+                  <Node name="Data" expanded="True" />
+                  <Node name="Pages" expanded="True" />
+                </Node>
+              </Node>
+              <Node name="Controllers" expanded="True" />
+              <Node name="Data" expanded="True" />
+              <Node name="Images" expanded="True" />
+              <Node name="Models" expanded="True" />
+              <Node name="Pages" expanded="True">
+                <Node name="Admin" expanded="True" />
+                <Node name="Parent" expanded="True" />
+                <Node name="Pedia" expanded="True">
+                  <Node name="AppointmentList.cshtml" expanded="True" />
+                  <Node name="SubscriptionPayment.cshtml" expanded="True" />
+                </Node>
+              </Node>
+              <Node name="Properties" expanded="True" />
+              <Node name="Utilities" expanded="True" />
+              <Node name="Views" expanded="True">
+                <Node name="Home" expanded="True" />
+                <Node name="Registration" expanded="True" />
+                <Node name="Services" expanded="True" />
+                <Node name="Shared" expanded="True">
+                  <Node name="_Layout.cshtml" expanded="True" />
+                </Node>
+                <Node name="Welcome" expanded="True" />
+              </Node>
+              <Node name="wwwroot" expanded="True">
+                <Node name="css" expanded="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+</Properties>

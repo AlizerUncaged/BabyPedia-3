@@ -1,0 +1,90 @@
+﻿@page
+@inject IHttpContextAccessor HttpContextAccessor
+@model BabyPedia.Models.Parent
+@{
+    ViewData["Title"] = "User Registration";
+    Layout = "_Layout";
+
+    var textBoxClasses = new Dictionary<string, object>()
+    {
+        { "class", "form-control" },
+        { "required", "" },
+        // { "readonly", "readonly" },
+    };
+
+}
+
+@if (HttpContextAccessor.HttpContext.Request.Query.TryGetValue("error", out var errorString))
+{
+    <div class="alert alert-danger" role="alert">
+        @errorString
+    </div>
+}
+<div class="text-center container-fluid row text-primary">
+    <h1 class="display-4 long-rounded fw-bold">Registration</h1>
+    <p class="fw-bold text-dark">
+        Register an account
+    </p>
+</div>
+<script>
+      
+        var checkForm = function(form) {
+          if(!form.tos.checked) {
+            alert("Please indicate that you accept the Terms and Conditions");
+            form.tos.focus();
+            return false;
+          }
+          if(!form.personalcheck.checked) {
+            alert("Please indicate that your personal data will be uploaded to the internet");
+            form.personalcheck.focus();
+            return false;
+          }
+          return true;
+        };
+      
+</script>
+<form class="container-fluid row" onsubmit="return checkForm(this)" method="post" action="/register-account">
+    <div class="col-md-6 col-12">
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.UserName, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.UserName)
+        </div>
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.Email, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.Email)
+        </div>
+        <div class="form-floating mb-3">
+            <input  required  type="password" class="form-control" id="password" name="password">
+            <label for="password">Password</label>
+        </div>
+    </div>
+    <div class="col-md-6 col-12">
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.FirstName, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.FirstName)
+        </div>
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.LastName, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.LastName)
+        </div>
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.Address, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.Address)
+        </div>
+        <div class="mb-3">
+            <select name="role" class="form-select" aria-label="Default select example">
+                <option selected>User Role</option>
+                <option value="Pedia">Pedia</option>
+                <option value="Parent">Parent</option>
+                <option value="Admin">Admin</option>
+            </select>
+        </div>
+
+        <div class="flex-column d-flex justify-content-between">
+            <a class="mb-2 nav-link">Already have an account?</a>
+            <button class="btn btn-primary">
+                <i class="bi bi-arrow-bar-right"></i> Register
+            </button>
+        </div>
+    </div>
+</form>
