@@ -245,22 +245,19 @@ public class HomeController : Controller
         return Redirect("/home/login?info=Verified!");
     }
 
+    [Authorize(Roles = "Admin")]
+    [HttpGet("/view/{id}")]
+    public async Task<IActionResult> ViewPediaData(string id)
+    {
+        return View(await _babyPediaContext.PartneredPedias
+            .FirstOrDefaultAsync(x => x.Id == id));
+    }
+
+
     [Authorize(Roles = "Parent")]
     [HttpGet("/parent/currentappointment/{id}")]
     public async Task<IActionResult> ParentCurrentAppointment(long id)
     {
-        // var currentUserId = _userManager.GetUserId(User);
-        // var currentParent = await _babyPediaContext.Parents
-        //     .Include(x => x.Appointments)
-        //     .ThenInclude(x => x.AppointmentType)
-        //     .Include(x => x.Appointments)
-        //     .ThenInclude(x => x.Pedia)
-        //     .Include(x => x.Appointments)
-        //     .ThenInclude(x => x.Child)
-        //     .Include(x => x.Appointments)
-        //     .ThenInclude(x => x.Payment)
-        //     .FirstOrDefaultAsync(x => x.Id == currentUserId);
-        //
         return View(await _babyPediaContext.Appointments
             .Include(x => x.Pedia)
             .Include(x => x.Parent)

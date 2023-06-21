@@ -1,0 +1,65 @@
+@model BabyPedia.Models.PartneredPedia
+
+@{
+    ViewBag.Title = Model.FirstName;
+    Layout = "_Layout";
+
+    var textBoxClasses = new Dictionary<string, object>()
+    {
+        { "class", "form-control" },
+        { "readonly", "readonly" },
+    };
+    var textBoxClassesReadonly = new Dictionary<string, object>()
+    {
+        { "class", "form-control" },
+        { "readonly", "readonly" },
+    };
+}
+
+<div class="text-center container-fluid row text-primary">
+    <h1 class="display-4 long-rounded fw-bold">Pedia Information</h1>
+</div>
+
+<form class="container-fluid row" action="/register-child" method="post">
+    <div class="col-md-6 col-12">
+        @* <div class="form-floating mb-3"> *@
+        @*     @Html.HiddenFor(m => m.Id, htmlAttributes: textBoxClassesReadonly) *@
+        @* </div> *@
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.FirstName, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.FirstName)
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.LastName, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.LastName)
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.HiddenFor(m => m.DateTimeCreated, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.DateTimeCreated)
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.Address, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.Address)
+        </div>
+
+    </div>
+    <div class="col-md-6 col-12">
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.ContactNumber, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.ContactNumber)
+        </div>
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.SubscriptionStatus, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.SubscriptionStatus)
+        </div>
+
+        <div class="form-floating mb-3">
+            @Html.TextBoxFor(m => m.PrcExpiration, htmlAttributes: textBoxClasses)
+            @Html.LabelFor(x => x.PrcExpiration)
+        </div>
+
+    </div>
+</form>

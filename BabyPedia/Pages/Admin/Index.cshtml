@@ -102,6 +102,10 @@
                             <a href="/verify/@partneredPedia2.Id" class="btn mx-auto me-2 mb-2 btn-@(!dynamicUser.IsVerified ? "success" : "danger")">
                                 @(!dynamicUser.IsVerified ? "Verify" : "Unverify")
                             </a>
+                            <a href="/view/@partneredPedia2.Id" class="btn mx-auto me-2 mb-2 btn-success">
+                               <i class="bi bi-eye me-2"></i>View Data
+                            </a>
+                            
                         }
 
                         <a href="/user/delete/@user.Id" class="btn  me-2 mb-2  text-light" style="background-color: #0B82D1 !important;">Delete User</a>
