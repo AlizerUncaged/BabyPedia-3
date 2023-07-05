@@ -383,7 +383,6 @@ public class HomeController : Controller
     }
 
 
-    [Authorize(Roles = "Pedia,Admin")]
     [HttpGet("/vaccines/{id}")]
     public async Task<IActionResult> VaccineInformation(long id)
     {
