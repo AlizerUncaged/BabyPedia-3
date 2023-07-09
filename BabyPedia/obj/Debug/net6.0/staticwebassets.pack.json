@@ -45,6 +45,10 @@
       "PackagePath": "staticwebassets\\images\\medical-symbol-rx-signage-template-free-vector.webp"
     },
     {
+      "Id": "E:\\Work\\BP\\BabyPediaMainRepo-main\\BabyPedia\\wwwroot\\images\\vaccineinformation.jpg",
+      "PackagePath": "staticwebassets\\images\\vaccineinformation.jpg"
+    },
+    {
       "Id": "E:\\Work\\BP\\BabyPediaMainRepo-main\\BabyPedia\\wwwroot\\js\\signalr\\dist\\browser\\signalr.js",
       "PackagePath": "staticwebassets\\js\\signalr\\dist\\browser\\signalr.js"
     },

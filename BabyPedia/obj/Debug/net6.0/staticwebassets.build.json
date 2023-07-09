@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "n1DZLtM56M63/fvExpHBqAiQKX987t0oNAWu2AL1oEY=",
+  "Hash": "uuFCJni56v6XIlKjKvEtuRegP2c00beXyzA1SS7ESiQ=",
   "Source": "BabyPedia",
   "BasePath": "_content/BabyPedia",
   "Mode": "Default",
@@ -1222,6 +1222,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\SubscriptionOffers.png"
+    },
+    {
+      "Identity": "E:\\Work\\BP\\BabyPediaMainRepo-main\\BabyPedia\\wwwroot\\images\\vaccineinformation.jpg",
+      "SourceId": "BabyPedia",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\Work\\BP\\BabyPediaMainRepo-main\\BabyPedia\\wwwroot\\",
+      "BasePath": "_content/BabyPedia",
+      "RelativePath": "images/vaccineinformation.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\vaccineinformation.jpg"
     },
     {
       "Identity": "E:\\Work\\BP\\BabyPediaMainRepo-main\\BabyPedia\\wwwroot\\js\\signalr\\dist\\browser\\signalr.js",
